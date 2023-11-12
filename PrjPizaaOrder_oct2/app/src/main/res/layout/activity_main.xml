@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pizza Order"
+        android:textSize="30sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textStyle="bold"
+        android:textColor="#009688"/>
+
+    <EditText
+        android:id="@+id/edClientNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvClNum"
+        app:layout_constraintLeft_toRightOf="@id/tvClNum"
+        android:layout_marginLeft="30dp"
+
+         />
+
+    <TextView
+        android:id="@+id/tvClNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Client Number"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="40dp"
+        android:textSize="20sp"
+        android:layout_marginLeft="30dp"/>
+
+    <TextView
+        android:id="@+id/tvPizza"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pizza"
+        app:layout_constraintTop_toBottomOf="@id/tvClNum"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="@id/tvClNum"
+        android:textSize="20sp"/>
+
+    <RadioGroup
+        android:id="@+id/rgPizaa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/tvPizza"
+        app:layout_constraintStart_toStartOf="@id/edClientNum">
+
+        <RadioButton
+            android:id="@+id/rbCheese"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cheese"
+            android:textSize="20sp"
+            android:textStyle="italic"/>
+
+        <RadioButton
+            android:id="@+id/rbvegi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="vegetarian"
+            android:textSize="20sp"
+            android:textStyle="italic"/>
+
+        <RadioButton
+            android:id="@+id/rbMexican"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mexican"
+            android:textStyle="italic"
+            android:textSize="20sp"/>
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvNbSlices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="How many slices? "
+        app:layout_constraintStart_toStartOf="@id/tvClNum"
+        app:layout_constraintTop_toBottomOf="@id/rgPizaa"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"/>
+
+    <EditText
+        android:id="@+id/edNbSlices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvNbSlices"
+        app:layout_constraintStart_toStartOf="@id/edClientNum"
+       />
+
+    <TextView
+        android:id="@+id/tvAmountLable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Amount"
+        app:layout_constraintTop_toBottomOf="@id/tvNbSlices"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="@id/tvClNum"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/tvAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="........"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvAmountLable"
+        app:layout_constraintStart_toStartOf="@id/edClientNum"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tvClNum"
+        android:layout_marginBottom="20dp"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/btnShowALL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show All"
+        app:layout_constraintBaseline_toBaselineOf="@id/btnQuit"
+        app:layout_constraintLeft_toRightOf="@id/btnSave"
+        app:layout_constraintRight_toLeftOf="@id/btnQuit"
+        android:textAllCaps="false"
+        />
+
+    <Button
+        android:id="@+id/btnQuit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quit"
+        app:layout_constraintBaseline_toBaselineOf="@id/btnSave"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="10dp"
+        android:textAllCaps="false"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

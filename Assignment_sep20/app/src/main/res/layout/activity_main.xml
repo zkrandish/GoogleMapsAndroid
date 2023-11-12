@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/calculation"
+        android:textSize="30sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="30dp"
+        />
+
+    <TextView
+        android:id="@+id/tvFirstNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/number1"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        />
+
+    <EditText
+        android:id="@+id/edNum1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvFirstNumber"
+        app:layout_constraintLeft_toRightOf="@id/tvFirstNumber"
+        android:layout_marginLeft="30dp"/>
+
+    <TextView
+        android:id="@+id/tvSecondNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/number2"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/tvFirstNumber"
+        app:layout_constraintStart_toStartOf="@id/tvFirstNumber"
+        android:layout_marginTop="30dp"/>
+
+    <EditText
+        android:id="@+id/edNum2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvSecondNumber"
+        app:layout_constraintStart_toStartOf="@id/edNum1"/>
+
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/result"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/tvSecondNumber"
+        app:layout_constraintStart_toStartOf="@id/tvSecondNumber"
+        android:layout_marginTop="30dp"/>
+
+    <EditText
+        android:id="@+id/edResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvResult"
+        app:layout_constraintStart_toStartOf="@id/edNum2"/>
+
+    <Button
+        android:id="@+id/btnCalculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/calculate"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/btnClear"
+        android:layout_marginBottom="30dp"
+        android:textAllCaps="false"
+        android:onClick="processButton"
+        />
+
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/clear"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/btnCalculate"
+        app:layout_constraintStart_toStartOf="@id/tvFirstNumber"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp"
+        android:textAllCaps="false"
+        android:onClick="processButton"/>
+
+    <Button
+        android:id="@+id/btnQuit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/quit"
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/btnCalculate"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="20dp"
+        android:onClick="processButton"
+        />
+
+    <RadioButton
+        android:id="@+id/rbAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add"
+        app:layout_constraintStart_toEndOf="@id/edNum1"
+        app:layout_constraintBaseline_toBaselineOf="@id/edNum1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="20dp"
+
+        />
+
+    <RadioButton
+        android:id="@+id/rbMultiply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/multiply"
+        app:layout_constraintStart_toEndOf="@id/edNum2"
+        app:layout_constraintBaseline_toBaselineOf="@id/edNum2"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="20dp"/>
+
+    <RadioButton
+        android:id="@+id/rbSubtract"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/subtract"
+        app:layout_constraintStart_toEndOf="@id/edResult"
+        app:layout_constraintBaseline_toBaselineOf="@id/edResult"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="20dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1013039640026",
+    "firebase_url": "https://prjadvfbzahra-default-rtdb.firebaseio.com",
+    "project_id": "prjadvfbzahra",
+    "storage_bucket": "prjadvfbzahra.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013039640026:android:0a3cdd57555ce6d4d364e3",
+        "android_client_info": {
+          "package_name": "com.example.prjadvfb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCM4wssIsbak3Am9UuNSvBP_VIm4TzoiM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

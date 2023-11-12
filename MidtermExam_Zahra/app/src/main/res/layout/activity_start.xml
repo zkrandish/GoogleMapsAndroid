@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StartActivity">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/reddish"/>
+    <TextView
+        android:id="@+id/tvId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/username"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/reddish"
+        />
+    <EditText
+        android:id="@+id/edId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:inputType="text"
+        android:text=""
+        app:layout_constraintTop_toTopOf="@id/tvId"
+        app:layout_constraintBottom_toBottomOf="@id/tvId"
+        app:layout_constraintLeft_toRightOf="@id/tvId"
+        android:layout_marginLeft="30dp"
+        />
+    <TextView
+        android:id="@+id/tvCommonTrans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/common_transport"
+        app:layout_constraintTop_toBottomOf="@id/edId"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:textColor="@color/reddish"
+        />
+
+    <CheckBox
+        android:id="@+id/chBus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bus"
+        app:layout_constraintTop_toBottomOf="@id/tvCommonTrans"
+        app:layout_constraintStart_toStartOf="@id/edId"/>
+
+    <CheckBox
+        android:id="@+id/chMetro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/metro"
+        app:layout_constraintTop_toBottomOf="@id/chBus"
+        app:layout_constraintStart_toStartOf="@id/edId"/>
+
+    <ImageView
+        android:id="@+id/imagebus"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/bus"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.5"
+        />
+    <TextView
+        android:id="@+id/tvPrivate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/private_transport"
+        app:layout_constraintTop_toBottomOf="@id/edId"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:textColor="@color/reddish"
+        />
+
+    <CheckBox
+        android:id="@+id/chcar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/car"
+        app:layout_constraintTop_toBottomOf="@id/tvPrivate"
+        app:layout_constraintLeft_toRightOf="@id/imagebus"
+        android:layout_marginLeft="50dp"
+        />
+
+    <CheckBox
+        android:id="@+id/chBike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bike"
+        app:layout_constraintTop_toBottomOf="@id/chcar"
+        app:layout_constraintStart_toEndOf="@id/imagebus"
+        android:layout_marginLeft="50dp"
+        />
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="20dp"
+        android:textColorLink="@color/reddish"
+        />
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clear All"
+        app:layout_constraintTop_toTopOf="@id/btnSave"
+        app:layout_constraintLeft_toLeftOf="@id/btnSave"
+        app:layout_constraintRight_toRightOf="@id/btnQuit"
+        android:textAllCaps="false"
+        />
+    <Button
+        android:id="@+id/btnQuit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quit"
+        app:layout_constraintTop_toTopOf="@id/btnSave"
+        app:layout_constraintBottom_toBottomOf="@id/btnSave"
+        app:layout_constraintRight_toLeftOf="@id/btnShowAll"
+        android:textAllCaps="false"
+        android:layout_marginRight="20dp"
+
+        />
+
+    <Button
+        android:id="@+id/btnShowAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show all"
+        android:textAllCaps="false"
+        app:layout_constraintTop_toTopOf="@id/btnSave"
+        app:layout_constraintBottom_toBottomOf="@id/btnSave"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
