@@ -153,7 +153,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         dataFetch[0] = mMap;
                         dataFetch[1] = url;
 
-                        FetchData fetchData = new FetchData();
+                        FetchData fetchData = new FetchData(MapsActivity.this);
                         fetchData.execute(dataFetch);
                     }
                 }, 3000); // The delay time after which you want to start the search
