@@ -2,6 +2,8 @@ package com.example.placesprojectdemo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,6 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class FetchData extends AsyncTask<Object, String, String> {
     private String googleNearByPlacesData;
@@ -52,6 +56,13 @@ public class FetchData extends AsyncTask<Object, String, String> {
         return googleNearByPlacesData;
     }
 
+    private LatLng getLatLngFromPlace(JSONObject placeObject) throws JSONException {
+        JSONObject location = placeObject.getJSONObject("geometry").getJSONObject("location");
+        double lat = location.getDouble("lat");
+        double lng = location.getDouble("lng");
+        return new LatLng(lat, lng);
+    }
+
     @Override
     protected void onPostExecute(String s) {
         try {
@@ -60,146 +71,95 @@ public class FetchData extends AsyncTask<Object, String, String> {
 
             // Iterate through the results and add markers
             for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                JSONObject getLocation = jsonObject1.getJSONObject("geometry")
-                        .getJSONObject("location");
-                String lat = getLocation.getString("lat");
-                String lng = getLocation.getString("lng");
-                JSONObject getName = jsonArray.getJSONObject(i);
-                String name = getName.getString("name");
-                LatLng latLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+                JSONObject placeObject = jsonArray.getJSONObject(i);
+                LatLng latLng = getLatLngFromPlace(placeObject);
+
+                String name = placeObject.getString("name");
+
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.title(name);
                 markerOptions.position(latLng);
                 googleMap.addMarker(markerOptions);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-
-                // Check if the user clicked on a marker
-                googleMap.setOnMarkerClickListener(marker -> {
-                    // Assuming your marker's title is the place name
-                    String selectedPlaceName = marker.getTitle();
-
-                    // Query the Firebase database for the selected place
-                    queryFirebaseDatabase(selectedPlaceName);
-
-                    return false;
-                });
             }
+
+            // Set marker click listener
+            googleMap.setOnMarkerClickListener(marker -> {
+                // Assuming your marker's title is the place name
+                String selectedPlaceName = marker.getTitle();
+
+                // Get the LatLng object from the marker
+                LatLng selectedPlaceLatLng = marker.getPosition();
+
+                // Query the Firebase database for the selected place
+                queryFirebaseDatabase(selectedPlaceName, selectedPlaceLatLng);
+
+                return true;
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void queryFirebaseDatabase(String selectedPlaceName) {
+    private void queryFirebaseDatabase(String selectedPlaceName, LatLng selectedPlaceLatLng) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("washrooms");
         databaseReference.orderByChild("name").equalTo(selectedPlaceName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
-
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
-                            // Retrieve details and navigate to details activity
-                            for (DataSnapshot datasnapshot : snapshot.getChildren()) {
-                                // Retrieve only the name
-                                String selectedPlaceName = datasnapshot.child("name").getValue(String.class);
+                            // Get the first matching Washroom object (assuming unique names)
+                            DataSnapshot firstChild = snapshot.getChildren().iterator().next();
+                            Washroom washroom = firstChild.getValue(Washroom.class);
 
-                                if (selectedPlaceName != null) {
-                                    Log.d("FetchData", "Selected Place Name: " + selectedPlaceName);
+                            // Start the details activity and pass the washroom details
+                            if (washroom != null) {
+                                String address = getAddressFromLatLng(context, selectedPlaceLatLng);
+                                // Update the washroom object with the address, latitude, and longitude
+                                washroom.setAddress(address);
+                                washroom.setLatitude(selectedPlaceLatLng.latitude);
+                                washroom.setLongitude(selectedPlaceLatLng.longitude);
 
-                                    // Start the details activity and pass the selectedPlaceName
-                                    if (context != null) {
-                                        // Start the details activity and pass the selectedPlaceName
-                                        Intent intent = new Intent(context, WashroomDetailsActivity.class);
-                                        intent.putExtra("selectedPlaceName", selectedPlaceName);
-                                        context.startActivity(intent);
-                                    } else {
-                                        Log.e("FetchData", "Context is null");
-                                    }
-                                }
+                                // Save the washroom data to Firebase
+                                addWashroomToFirebase(washroom);
+
+                                Intent intent = new Intent(context, WashroomDetailsActivity.class);
+                                intent.putExtra("washroom", washroom);
+                                context.startActivity(intent);
                             }
                         } else {
-                            // Handle the case where the selected place is not found in the database
                             Toast.makeText(context, "Place details not found", Toast.LENGTH_SHORT).show();
                         }
                     }
 
-
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        // Check if the selected place exists in the database
-//                        if (snapshot.exists()) {
-//                            // Retrieve details and navigate to details activity
-//                            for (DataSnapshot datasnapshot : snapshot.getChildren()) {
-//                                // Retrieve only the name
-//                                String selectedPlaceName = datasnapshot.child("name").getValue(String.class);
-//
-//                                if (selectedPlaceName != null) {
-//                                    // Start the details activity and pass the selectedPlaceName
-//                                    Intent intent = new Intent(context, WashroomDetailsActivity.class);
-//                                    intent.putExtra("selectedPlaceName", selectedPlaceName);
-//                                    context.startActivity(intent);
-//                                }
-//                            }
-//                        } else {
-//                            // Handle the case where the selected place is not found in the database
-//                            Toast.makeText(context, "Place details not found", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-
-
-
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        Log.d("FetchData", "onDataChange: Snapshot exists - " + snapshot.exists());
-//                        // Check if the selected place exists in the database
-//                        if (snapshot.exists()) {
-//                            // Retrieve details and navigate to details activity
-//                            for (DataSnapshot datasnapshot : snapshot.getChildren()) {
-//                                Washroom washroom = datasnapshot.getValue(Washroom.class);
-//                                if (washroom != null) {
-//                                    Log.d("FetchData", "Washroom details: " + washroom.toString());
-//                                    // Start the details activity and pass the washroom details
-//                                    Intent intent = new Intent(context, WashroomDetailsActivity.class);
-//                                    intent.putExtra("washroom", washroom);
-//                                    context.startActivity(intent);
-//                                }
-//                            }
-//                        } else {
-//                            // Handle the case where the selected place is not found in the database
-//                            Log.d("FetchData", "onDataChange: Place details not found in the database");
-//                            Toast.makeText(context, "Place details not found", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-
-
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        // Check if the selected place exists in the database
-//                        if (snapshot.exists()) {
-//                            // Retrieve details and navigate to details activity
-//                            for (DataSnapshot datasnapshot : snapshot.getChildren()) {
-//                                Washroom washroom = snapshot.getValue(Washroom.class);
-//                                if (washroom != null) {
-//                                    // Start the details activity and pass the washroom details
-//                                    Intent intent = new Intent(context, WashroomDetailsActivity.class);
-//                                    intent.putExtra("washroom", washroom);
-//                                    context.startActivity(intent);
-//                                }
-//                            }
-//                        } else {
-//                            // Handle the case where the selected place is not found in the database
-//                            Toast.makeText(context, "Place details not found", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        // Handle database error
                         Log.e("FetchData", "Database error: " + error.getMessage());
                     }
-
-
                 });
     }
+
+    private String getAddressFromLatLng(Context context, LatLng latLng) {
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            if (addresses != null && addresses.size() > 0) {
+                Address address = addresses.get(0);
+                Log.d("FetchData", "Selected Place Address: " + address.getAddressLine(0));
+                return address.getAddressLine(0); // You can modify this to get more details if needed
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Address not found";
+    }
+
+    // Inside the method that adds a washroom to Firebase
+    private void addWashroomToFirebase(Washroom washroom) {
+        DatabaseReference washroomsRef = FirebaseDatabase.getInstance().getReference("washrooms");
+        String washroomId = washroomsRef.push().getKey(); // Generate a unique key for the washroom
+        washroomsRef.child(washroomId).setValue(washroom);
+    }
+
 }

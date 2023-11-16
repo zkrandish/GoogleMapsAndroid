@@ -13,18 +13,21 @@ public class WashroomDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_washroom_details);
 
-        // Retrieve the Washroom object from the Intent
-        Washroom washroom = getIntent().getParcelableExtra("washroom");
+        // Get the Washroom object from Intent
+        Washroom washroom = (Washroom) getIntent().getSerializableExtra("washroom");
 
-        // Now you can use the details of the washroom as needed
+        // Find TextViews in the layout
+        TextView textViewName = findViewById(R.id.textViewName);
+        TextView textViewAddress = findViewById(R.id.textViewAddress);
+        TextView textViewLatitude = findViewById(R.id.textViewLatitude);
+        TextView textViewLongitude = findViewById(R.id.textViewLongitude);
+
+        // Set values to TextViews
         if (washroom != null) {
-            // Example: Display washroom details in a TextView
-            TextView textView = findViewById(R.id.textView);
-            textView.setText("Washroom Name: " + washroom.getName());
-        } else {
-            // Handle the case where the washroom object is null
-            Toast.makeText(this, "Washroom details not available", Toast.LENGTH_SHORT).show();
-            //finish(); // Close the activity if no washroom details are available
+            textViewName.setText(washroom.getName());
+            textViewAddress.setText(washroom.getAddress());
+            textViewLatitude.setText(String.valueOf(washroom.getLatitude()));
+            textViewLongitude.setText(String.valueOf(washroom.getLongitude()));
         }
     }
 }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Washroom implements Serializable {
     private String name;
-    private String details;
+    private String address;
     private double latitude;
     private double longitude;
 
@@ -14,9 +14,9 @@ public class Washroom implements Serializable {
         // Default constructor required for Firebase
     }
 
-    public Washroom(String name, String details, double latitude, double longitude) {
+    public Washroom(String name, String address, double latitude, double longitude) {
         this.name = name;
-        this.details = details;
+        this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -29,12 +29,12 @@ public class Washroom implements Serializable {
         this.name = name;
     }
 
-    public String getDetails() {
-        return details;
+    public String getAddress() {
+        return address;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public double getLatitude() {
@@ -59,7 +59,7 @@ public class Washroom implements Serializable {
     public String toString() {
         return "Washroom{" +
                 "name='" + name + '\'' +
-                ", address='" + details + '\'' +
+                ", address='" + address + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 // Add other fields as needed
