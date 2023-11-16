@@ -91,6 +91,7 @@ public class FetchData extends AsyncTask<Object, String, String> {
                 // Get the LatLng object from the marker
                 LatLng selectedPlaceLatLng = marker.getPosition();
 
+
                 // Query the Firebase database for the selected place
                 queryFirebaseDatabase(selectedPlaceName, selectedPlaceLatLng);
 
