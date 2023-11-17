@@ -5,7 +5,24 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.ui.AppBarConfiguration;
+
+import com.example.placesprojectdemo.databinding.ActivityMapsBinding;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -22,8 +39,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
@@ -31,34 +46,9 @@ import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import androidx.core.content.MimeTypeFilter;
-import androidx.core.view.WindowCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.placesprojectdemo.databinding.ActivityMapsBinding;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 import com.skyfishjy.library.RippleBackground;
@@ -100,6 +90,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int LOCATION_FASTEST_UPDATE_INTERVAL = 5000; // 5 seconds
     private AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
 
+    //Toolbar
+    private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +109,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //to manipulate the search
         initializeSearchBar();
+
+        // Initialize the Toolbar
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Add back button to the Toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         setupSearchBarListener();
         setupSuggestionsClickListener();
@@ -138,15 +139,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         // Now, you can fetch the nearby places using the current location
                         // For example, if you're looking for nearby hospitals, you can construct the URL
-                        String type = "toilet"; // or "restaurant", "bank", etc.
+                        String keyword = "Public Toilet"; // or "restaurant", "bank", etc.
                         StringBuilder stringBuilder = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
                         stringBuilder.append("location=").append(currentMarkerLocation.latitude).append(",").append(currentMarkerLocation.longitude);
                         stringBuilder.append("&radius=1000"); // Define the search radius
-                        stringBuilder.append("&type=").append(type);
+                        stringBuilder.append("&keyword=").append(keyword);
                         stringBuilder.append("&sensor=true");
                         stringBuilder.append("&key=").append(getResources().getString(R.string.google_maps_key));
 
                         String url = stringBuilder.toString();
+                        Log.e("The URL", url);
 
                         // Use AsyncTask to perform the network request
                         Object dataFetch[] = new Object[2];
@@ -166,7 +168,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnFind = findViewById(R.id.btnFind);
         ripple_bg = findViewById(R.id.ripple_bg);
 
+            // Initialize the Toolbar
+            toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
+            // Add back button to the Toolbar
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Handle Toolbar navigation clicks here
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed(); // Go back when the back button is clicked
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpMap() {

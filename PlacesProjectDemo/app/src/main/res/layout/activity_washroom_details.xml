@@ -1,66 +1,106 @@
-<!-- activity_washroom_details.xml -->
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    tools:context=".MapsActivity">
 
-    <!-- Name TextView -->
-    <TextView
-        android:id="@+id/textViewName"
+    <!-- Main Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        tools:text="Washroom Name" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/actionBarTheme">
 
-    <!-- Address TextView -->
-    <TextView
-        android:id="@+id/textViewAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="16sp"
-        tools:text="Washroom Address" />
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Back"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:onClick="onBackButtonClick"/>
 
-    <!-- Latitude and Longitude TextViews -->
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- Content Layout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_below="@id/toolbar">
 
+        <!-- Name TextView -->
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/textViewName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Latitude: "
-            android:textSize="16sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="Washroom Name" />
 
+        <!-- Address TextView -->
         <TextView
-            android:id="@+id/textViewLatitude"
-            android:layout_width="0dp"
+            android:id="@+id/textViewAddress"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginTop="8dp"
             android:textSize="16sp"
-            tools:text="12.345678" />
+            tools:text="Washroom Address" />
 
-        <TextView
-            android:layout_width="0dp"
+        <!-- Latitude and Longitude TextViews -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Longitude: "
-            android:textSize="16sp" />
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
 
+            <!-- Latitude -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Latitude: "
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewLatitude"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                tools:text="" />
+
+            <!-- Longitude -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Longitude: "
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textViewLongitude"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                tools:text="" />
+        </LinearLayout>
+
+        <!-- Rating TextView -->
         <TextView
-            android:id="@+id/textViewLongitude"
-            android:layout_width="0dp"
+            android:id="@+id/textViewRating"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginTop="8dp"
             android:textSize="16sp"
-            tools:text="23.456789" />
+            tools:text="Rating: " />
     </LinearLayout>
-</LinearLayout>
+    <!-- Rest of your layout -->
+
+</RelativeLayout>

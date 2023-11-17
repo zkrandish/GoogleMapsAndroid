@@ -7,6 +7,7 @@ public class Washroom implements Serializable {
     private String address;
     private double latitude;
     private double longitude;
+    private float rating;
 
     // Add other fields as needed
 
@@ -14,11 +15,12 @@ public class Washroom implements Serializable {
         // Default constructor required for Firebase
     }
 
-    public Washroom(String name, String address, double latitude, double longitude) {
+    public Washroom(String name, String address, double latitude, double longitude, float rating) {
         this.name = name;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.rating = rating;
     }
 
     public String getName() {
@@ -53,6 +55,14 @@ public class Washroom implements Serializable {
         this.longitude = longitude;
     }
 
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
     // Add getters and setters for other fields
 
     @Override
@@ -62,6 +72,7 @@ public class Washroom implements Serializable {
                 ", address='" + address + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
+                ", rating=" + rating +
                 // Add other fields as needed
                 '}';
     }

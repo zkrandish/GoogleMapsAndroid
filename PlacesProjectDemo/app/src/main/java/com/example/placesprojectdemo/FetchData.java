@@ -8,8 +8,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -56,12 +54,7 @@ public class FetchData extends AsyncTask<Object, String, String> {
         return googleNearByPlacesData;
     }
 
-    private LatLng getLatLngFromPlace(JSONObject placeObject) throws JSONException {
-        JSONObject location = placeObject.getJSONObject("geometry").getJSONObject("location");
-        double lat = location.getDouble("lat");
-        double lng = location.getDouble("lng");
-        return new LatLng(lat, lng);
-    }
+
 
     @Override
     protected void onPostExecute(String s) {
@@ -72,72 +65,28 @@ public class FetchData extends AsyncTask<Object, String, String> {
             // Iterate through the results and add markers
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject placeObject = jsonArray.getJSONObject(i);
-                LatLng latLng = getLatLngFromPlace(placeObject);
+                LatLng selectedPlaceLatLng = getLatLngFromPlace(placeObject);
 
                 String name = placeObject.getString("name");
+                //String openingHours = getOpeningHours(placeObject);
+                float rating = getRating(placeObject);
 
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.title(name);
-                markerOptions.position(latLng);
+                markerOptions.position(selectedPlaceLatLng);
                 googleMap.addMarker(markerOptions);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedPlaceLatLng, 15));
+
+                String address = getAddressFromLatLng(context, selectedPlaceLatLng);
+                googleMap.setOnMarkerClickListener(marker -> {
+                    // Check if the washroom is in the database based on its name
+                    checkWashroomInDatabase(name, address, selectedPlaceLatLng, rating);
+                    return true;
+                });
             }
-
-            // Set marker click listener
-            googleMap.setOnMarkerClickListener(marker -> {
-                // Assuming your marker's title is the place name
-                String selectedPlaceName = marker.getTitle();
-
-                // Get the LatLng object from the marker
-                LatLng selectedPlaceLatLng = marker.getPosition();
-
-
-                // Query the Firebase database for the selected place
-                queryFirebaseDatabase(selectedPlaceName, selectedPlaceLatLng);
-
-                return true;
-            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    private void queryFirebaseDatabase(String selectedPlaceName, LatLng selectedPlaceLatLng) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("washrooms");
-        databaseReference.orderByChild("name").equalTo(selectedPlaceName)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            // Get the first matching Washroom object (assuming unique names)
-                            DataSnapshot firstChild = snapshot.getChildren().iterator().next();
-                            Washroom washroom = firstChild.getValue(Washroom.class);
-
-                            // Start the details activity and pass the washroom details
-                            if (washroom != null) {
-                                String address = getAddressFromLatLng(context, selectedPlaceLatLng);
-                                // Update the washroom object with the address, latitude, and longitude
-                                washroom.setAddress(address);
-                                washroom.setLatitude(selectedPlaceLatLng.latitude);
-                                washroom.setLongitude(selectedPlaceLatLng.longitude);
-
-                                // Save the washroom data to Firebase
-                                addWashroomToFirebase(washroom);
-
-                                Intent intent = new Intent(context, WashroomDetailsActivity.class);
-                                intent.putExtra("washroom", washroom);
-                                context.startActivity(intent);
-                            }
-                        } else {
-                            Toast.makeText(context, "Place details not found", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("FetchData", "Database error: " + error.getMessage());
-                    }
-                });
     }
 
     private String getAddressFromLatLng(Context context, LatLng latLng) {
@@ -156,11 +105,100 @@ public class FetchData extends AsyncTask<Object, String, String> {
         return "Address not found";
     }
 
+    private LatLng getLatLngFromPlace(JSONObject placeObject) throws JSONException {
+        JSONObject location = placeObject.getJSONObject("geometry").getJSONObject("location");
+        double lat = location.getDouble("lat");
+        double lng = location.getDouble("lng");
+        return new LatLng(lat, lng);
+    }
+
+    private float getRating(JSONObject placeObject) {
+        if (placeObject.has("rating")) {
+            try {
+                return (float) placeObject.getDouble("rating");
+            } catch (JSONException e) {
+                Log.e("RatingError", e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+    private void checkWashroomInDatabase(String selectedPlaceName, String address, LatLng selectedPlaceLatLng, float rating) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("washrooms");
+        databaseReference.orderByChild("name").equalTo(selectedPlaceName)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            // Get the first matching Washroom object (assuming unique names)
+                            DataSnapshot firstChild = snapshot.getChildren().iterator().next();
+                            Washroom washroom = firstChild.getValue(Washroom.class);
+
+                            // Start the details activity and pass the washroom details
+                            if (washroom != null) {
+                                // Update the washroom object with the address, latitude, and longitude
+                                washroom.setName(selectedPlaceName);
+                                washroom.setAddress(address);
+                                washroom.setLatitude(selectedPlaceLatLng.latitude);
+                                washroom.setLongitude(selectedPlaceLatLng.longitude);
+                                washroom.setRating(rating);
+
+                                // Save the washroom data to Firebase
+                                addWashroomToFirebase(washroom);
+
+                                Intent intent = new Intent(context, WashroomDetailsActivity.class);
+                                intent.putExtra("washroom", washroom);
+                                context.startActivity(intent);
+                            }
+                        } else {
+                            // Washroom not found in the database
+                            Toast.makeText(context, "Place details not found", Toast.LENGTH_SHORT).show();
+
+                            // Create a new Washroom object with the selected details
+                            Washroom newWashroom = new Washroom(selectedPlaceName, address, selectedPlaceLatLng.latitude, selectedPlaceLatLng.longitude, rating);
+
+                            // Add the new washroom to the database
+                            addWashroomToFirebase(newWashroom);
+
+                            // Start the details activity and pass the washroom details
+                            Intent intent = new Intent(context, WashroomDetailsActivity.class);
+                            intent.putExtra("washroom", newWashroom);
+                            context.startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.e("FetchData", "Database error: " + error.getMessage());
+                    }
+                });
+    }
+
     // Inside the method that adds a washroom to Firebase
     private void addWashroomToFirebase(Washroom washroom) {
         DatabaseReference washroomsRef = FirebaseDatabase.getInstance().getReference("washrooms");
         String washroomId = washroomsRef.push().getKey(); // Generate a unique key for the washroom
         washroomsRef.child(washroomId).setValue(washroom);
     }
+
+//    private String getOpeningHours(JSONObject placeObject) {
+//        try {
+//            if (placeObject.has("opening_hours")) {
+//                JSONArray weekdayTextArray = placeObject.getJSONObject("opening_hours").getJSONArray("weekday_text");
+//
+//                // Concatenate the weekday text into a single string
+//                StringBuilder openingHoursStringBuilder = new StringBuilder();
+//                for (int i = 0; i < weekdayTextArray.length(); i++) {
+//                    openingHoursStringBuilder.append(weekdayTextArray.getString(i)).append("\n");
+//                }
+//
+//                return openingHoursStringBuilder.toString();
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
 }
