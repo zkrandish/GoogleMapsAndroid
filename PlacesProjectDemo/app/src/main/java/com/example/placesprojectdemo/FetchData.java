@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -65,11 +66,21 @@ public class FetchData extends AsyncTask<Object, String, String> {
             // Iterate through the results and add markers
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject placeObject = jsonArray.getJSONObject(i);
-                LatLng selectedPlaceLatLng = getLatLngFromPlace(placeObject);
 
+                LatLng selectedPlaceLatLng = getLatLngFromPlace(placeObject);
                 String name = placeObject.getString("name");
-                //String openingHours = getOpeningHours(placeObject);
+                Boolean isOpenNow = getOpenNow(placeObject);
+                List<String> photoReferences = getPhotoReferences(placeObject);
                 float rating = getRating(placeObject);
+                String address = getAddressFromLatLng(context, selectedPlaceLatLng);
+
+                if (!photoReferences.isEmpty()) {
+                    Log.e("PhotoReferences", photoReferences.get(0));
+                } else {
+                    Log.e("PhotoReferences", "No photo references available");
+                }
+                Log.e("IsOpenNow", String.valueOf(isOpenNow));
+
 
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.title(name);
@@ -77,10 +88,10 @@ public class FetchData extends AsyncTask<Object, String, String> {
                 googleMap.addMarker(markerOptions);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedPlaceLatLng, 15));
 
-                String address = getAddressFromLatLng(context, selectedPlaceLatLng);
+
                 googleMap.setOnMarkerClickListener(marker -> {
                     // Check if the washroom is in the database based on its name
-                    checkWashroomInDatabase(name, address, selectedPlaceLatLng, rating);
+                    checkWashroomInDatabase(name, address, selectedPlaceLatLng, rating, photoReferences, isOpenNow);
                     return true;
                 });
             }
@@ -89,7 +100,35 @@ public class FetchData extends AsyncTask<Object, String, String> {
         }
     }
 
+    private Boolean getOpenNow(JSONObject placeObject) {
+        try {
+            if (placeObject.has("opening_hours") && placeObject.getJSONObject("opening_hours").has("open_now")) {
+                return placeObject.getJSONObject("opening_hours").getBoolean("open_now");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    private List<String> getPhotoReferences(JSONObject placeObject) {
+        List<String> photoReferences = new ArrayList<>();
+        try {
+            if (placeObject.has("photos")) {
+                JSONArray photosArray = placeObject.getJSONArray("photos");
+                for (int i = 0; i < photosArray.length(); i++) {
+                    JSONObject photoObject = photosArray.getJSONObject(i);
+                    if (photoObject.has("photo_reference")) {
+                        String photoReference = photoObject.getString("photo_reference");
+                        photoReferences.add(photoReference);
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return photoReferences;
+    }
 
     private String getAddressFromLatLng(Context context, LatLng latLng) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
@@ -126,7 +165,7 @@ public class FetchData extends AsyncTask<Object, String, String> {
         return 0;
     }
 
-    private void checkWashroomInDatabase(String selectedPlaceName, String address, LatLng selectedPlaceLatLng, float rating) {
+    private void checkWashroomInDatabase(String selectedPlaceName, String address, LatLng selectedPlaceLatLng, float rating, List<String> photoReferences, Boolean isOpenNow) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("washrooms");
         databaseReference.orderByChild("name").equalTo(selectedPlaceName)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -145,6 +184,8 @@ public class FetchData extends AsyncTask<Object, String, String> {
                                 washroom.setLatitude(selectedPlaceLatLng.latitude);
                                 washroom.setLongitude(selectedPlaceLatLng.longitude);
                                 washroom.setRating(rating);
+                                washroom.setOpenNow(isOpenNow);
+                                washroom.setPhotoReferences(photoReferences);
 
                                 // Save the washroom data to Firebase
                                 addWashroomToFirebase(washroom);
@@ -158,7 +199,7 @@ public class FetchData extends AsyncTask<Object, String, String> {
                             Toast.makeText(context, "Place details not found", Toast.LENGTH_SHORT).show();
 
                             // Create a new Washroom object with the selected details
-                            Washroom newWashroom = new Washroom(selectedPlaceName, address, selectedPlaceLatLng.latitude, selectedPlaceLatLng.longitude, rating);
+                            Washroom newWashroom = new Washroom(selectedPlaceName, address, selectedPlaceLatLng.latitude, selectedPlaceLatLng.longitude, rating, isOpenNow, photoReferences);
 
                             // Add the new washroom to the database
                             addWashroomToFirebase(newWashroom);

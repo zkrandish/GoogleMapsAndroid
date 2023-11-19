@@ -1,6 +1,8 @@
 package com.example.placesprojectdemo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Washroom implements Serializable {
     private String name;
@@ -9,18 +11,23 @@ public class Washroom implements Serializable {
     private double longitude;
     private float rating;
 
+    private Boolean openNow;
+    private List<String> photoReferences;
+
     // Add other fields as needed
 
     public Washroom() {
         // Default constructor required for Firebase
     }
 
-    public Washroom(String name, String address, double latitude, double longitude, float rating) {
+    public Washroom(String name, String address, double latitude, double longitude, float rating, Boolean openNow, List<String> photoReferences) {
         this.name = name;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.rating = rating;
+        this.openNow = false; // Default value
+        this.photoReferences = new ArrayList<>();
     }
 
     public String getName() {
@@ -63,6 +70,22 @@ public class Washroom implements Serializable {
         this.rating = rating;
     }
 
+    public Boolean isOpenNow() {
+        return openNow;
+    }
+
+    public void setOpenNow(Boolean openNow) {
+        this.openNow = openNow;
+    }
+
+    public List<String> getPhotoReferences() {
+        return photoReferences;
+    }
+
+    public void setPhotoReferences(List<String> photoReferences) {
+        this.photoReferences = new ArrayList<>(photoReferences);
+    }
+
     // Add getters and setters for other fields
 
     @Override
@@ -73,6 +96,7 @@ public class Washroom implements Serializable {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", rating=" + rating +
+                ", is Open now? =" + isOpenNow() +
                 // Add other fields as needed
                 '}';
     }
