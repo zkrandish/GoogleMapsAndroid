@@ -89,6 +89,8 @@ public class FetchData extends AsyncTask<Object, String, String> {
         }
     }
 
+
+
     private String getAddressFromLatLng(Context context, LatLng latLng) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {

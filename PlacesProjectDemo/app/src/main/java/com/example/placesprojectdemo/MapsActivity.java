@@ -139,7 +139,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         // Now, you can fetch the nearby places using the current location
                         // For example, if you're looking for nearby hospitals, you can construct the URL
-                        String keyword = "Public Toilet"; // or "restaurant", "bank", etc.
+                        String keyword = "Public%20Toilet"; // or "restaurant", "bank", etc.
                         StringBuilder stringBuilder = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
                         stringBuilder.append("location=").append(currentMarkerLocation.latitude).append(",").append(currentMarkerLocation.longitude);
                         stringBuilder.append("&radius=1000"); // Define the search radius
