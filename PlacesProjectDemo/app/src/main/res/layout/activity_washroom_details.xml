@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity">
+    tools:context=".WashroomDetailsActivity">
 
     <!-- Main Toolbar -->
     <androidx.appcompat.widget.Toolbar
@@ -100,6 +100,26 @@
             android:layout_marginTop="8dp"
             android:textSize="16sp"
             tools:text="Rating: " />
+
+        <!-- Open Now TextView -->
+        <TextView
+            android:id="@+id/textViewOpenNow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            tools:text="Open Now: " />
+
+        <!-- Photos Layout -->
+        <LinearLayout
+            android:id="@+id/photoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+            <!-- ImageView(s) for photos will be added dynamically -->
+        </LinearLayout>
+
     </LinearLayout>
     <!-- Rest of your layout -->
 

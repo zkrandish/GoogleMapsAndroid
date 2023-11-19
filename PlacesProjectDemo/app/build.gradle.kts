@@ -59,4 +59,7 @@ dependencies {
     implementation ("com.skyfishjy.ripplebackground:library:1.0.1")
     implementation ("com.google.android.gms:play-services-location:17.0.0")
 
+    implementation ("com.squareup.picasso:picasso:2.71828")
+
+
 }
