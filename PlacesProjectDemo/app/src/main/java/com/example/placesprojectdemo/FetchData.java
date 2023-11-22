@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -16,7 +18,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +36,8 @@ public class FetchData extends AsyncTask<Object, String, String> {
     private String googleNearByPlacesData;
     private GoogleMap googleMap;
     private Context context;
+
+    private int totalUserRatings;
 
     // Constructor to receive the context
     public FetchData(Context context) {
@@ -73,6 +80,8 @@ public class FetchData extends AsyncTask<Object, String, String> {
                 List<String> photoReferences = getPhotoReferences(placeObject);
                 float rating = getRating(placeObject);
                 String address = getAddressFromLatLng(context, selectedPlaceLatLng);
+
+                totalUserRatings = placeObject.optInt("user_ratings_total", 0);
 
                 if (!photoReferences.isEmpty()) {
                     Log.e("PhotoReferences", photoReferences.get(0));
@@ -183,12 +192,12 @@ public class FetchData extends AsyncTask<Object, String, String> {
                                 washroom.setAddress(address);
                                 washroom.setLatitude(selectedPlaceLatLng.latitude);
                                 washroom.setLongitude(selectedPlaceLatLng.longitude);
-                                washroom.setRating(rating);
+                                //washroom.setRating(rating);
                                 washroom.setOpenNow(isOpenNow);
                                 washroom.setPhotoReferences(photoReferences);
 
                                 // Save the washroom data to Firebase
-                                addWashroomToFirebase(washroom);
+                                databaseReference.child(washroom.getID()).setValue(washroom);
 
                                 Intent intent = new Intent(context, WashroomDetailsActivity.class);
                                 intent.putExtra("washroom", washroom);
@@ -222,26 +231,68 @@ public class FetchData extends AsyncTask<Object, String, String> {
     private void addWashroomToFirebase(Washroom washroom) {
         DatabaseReference washroomsRef = FirebaseDatabase.getInstance().getReference("washrooms");
         String washroomId = washroomsRef.push().getKey(); // Generate a unique key for the washroom
+        washroom.setID(washroomId);
         washroomsRef.child(washroomId).setValue(washroom);
     }
 
-//    private String getOpeningHours(JSONObject placeObject) {
-//        try {
-//            if (placeObject.has("opening_hours")) {
-//                JSONArray weekdayTextArray = placeObject.getJSONObject("opening_hours").getJSONArray("weekday_text");
-//
-//                // Concatenate the weekday text into a single string
-//                StringBuilder openingHoursStringBuilder = new StringBuilder();
-//                for (int i = 0; i < weekdayTextArray.length(); i++) {
-//                    openingHoursStringBuilder.append(weekdayTextArray.getString(i)).append("\n");
-//                }
-//
-//                return openingHoursStringBuilder.toString();
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    public void addRatingAndCommentToWashroom(String washroomId, float rating, String comment) {
+        DatabaseReference washroomsRef = FirebaseDatabase.getInstance().getReference("washrooms");
+
+        // Find the washroom by its ID and update the rating and comment
+        washroomsRef.child(washroomId).runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Washroom washroom = mutableData.getValue(Washroom.class);
+                if (washroom != null) {
+                    // Update the washroom's rating and comments
+                    washroom.updateRating(rating, totalUserRatings);
+                    Log.e("AGHA OOMAD", washroom.getID());
+                    washroom.setUserComment(comment);
+                    washroomsRef.child(washroom.getID()).setValue(washroom);
+                    // Set the updated washroom back to the database
+                    mutableData.setValue(washroom);
+
+                }
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot currentData) {
+                if (databaseError != null) {
+                    Log.e("FetchData", "Transaction failed: " + databaseError.getMessage());
+                } else if (committed) {
+                    Log.d("FetchData", "Transaction succeeded!");
+                } else {
+                    Log.d("FetchData", "Transaction skipped.");
+                }
+            }
+        });
+    }
+
+    public void fetchCommentsForWashroom(String washroomId, CommentsCallback callback) {
+        DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference("comments").child(washroomId);
+        commentsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> comments = new ArrayList<>();
+                for (DataSnapshot commentSnapshot : dataSnapshot.getChildren()) {
+                    String comment = commentSnapshot.getValue(String.class);
+                    comments.add(comment);
+                }
+                callback.onCommentsReceived(comments);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("FetchData", "Database error: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    public interface CommentsCallback {
+        void onCommentsReceived(List<String> comments);
+    }
+
 
 }
