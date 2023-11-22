@@ -90,8 +90,12 @@ public class FetchData extends AsyncTask<Object, String, String> {
 
 
                 googleMap.setOnMarkerClickListener(marker -> {
+                    LatLng markerLatLng = marker.getPosition();
+                    LocationHolder.setDestinationLocation(markerLatLng);
+
                     // Check if the washroom is in the database based on its name
                     checkWashroomInDatabase(name, address, selectedPlaceLatLng, rating, photoReferences, isOpenNow);
+
                     return true;
                 });
             }

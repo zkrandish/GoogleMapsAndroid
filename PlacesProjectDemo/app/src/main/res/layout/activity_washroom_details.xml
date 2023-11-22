@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".WashroomDetailsActivity">
 
+    <!-- Get Directions Button -->
+    <Button
+        android:id="@+id/buttonGetDirections"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Get Directions"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:focusable="true" />
     <!-- Main Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

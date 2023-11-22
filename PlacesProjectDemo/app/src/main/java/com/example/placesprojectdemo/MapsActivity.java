@@ -321,6 +321,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * location callback is a fuction that will be executed
      * when an updated location is recived
      * */
+    private double currentLat = 0.0;
+    private double currentLng = 0.0;
     @SuppressLint("MissingPermission")
     private void getDeviceLocation() {
         // Attempt to fetch the user's last known location.
@@ -330,9 +332,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (task.isSuccessful()) {
                     // Successfully retrieved the location.
                     mLastKnownLocation = task.getResult();
+                    LocationHolder.setCurrentLocation(mLastKnownLocation);
                     if (mLastKnownLocation != null) {
+                        // Store the current location
+                        currentLat = mLastKnownLocation.getLatitude();
+                        currentLng = mLastKnownLocation.getLongitude();
                         // If the last known location is not null, move the camera to that location.
                         moveCameraToLocation(mLastKnownLocation);
+
                     } else {
                         // If the last known location is null, request updated location.
                         requestLocationUpdates();
