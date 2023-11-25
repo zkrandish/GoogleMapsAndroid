@@ -23,6 +23,8 @@ public class Washroom implements Serializable {
         this.userComments = new ArrayList<String>();
     }
 
+
+
     public Washroom(String name, String address, double latitude, double longitude, float rating, Boolean openNow, List<String> photoReferences) {
         this.name = name;
         this.address = address;
@@ -30,7 +32,7 @@ public class Washroom implements Serializable {
         this.longitude = longitude;
         this.rating = rating;
         this.openNow = false; // Default value
-        //this.photoReferences = new ArrayList<String>();
+        this.photoReferences = new ArrayList<String>(photoReferences);
         this.userComments = new ArrayList<String>();
     }
 

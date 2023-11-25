@@ -77,7 +77,7 @@ public class FetchData extends AsyncTask<Object, String, String> {
                 LatLng selectedPlaceLatLng = getLatLngFromPlace(placeObject);
                 String name = placeObject.getString("name");
                 Boolean isOpenNow = getOpenNow(placeObject);
-                List<String> photoReferences = getPhotoReferences(placeObject);
+                ArrayList<String> photoReferences = getPhotoReferences(placeObject);
                 float rating = getRating(placeObject);
                 String address = getAddressFromLatLng(context, selectedPlaceLatLng);
 
@@ -120,8 +120,8 @@ public class FetchData extends AsyncTask<Object, String, String> {
         return null;
     }
 
-    private List<String> getPhotoReferences(JSONObject placeObject) {
-        List<String> photoReferences = new ArrayList<>();
+    private ArrayList<String> getPhotoReferences(JSONObject placeObject) {
+        ArrayList<String> photoReferences = new ArrayList<>();
         try {
             if (placeObject.has("photos")) {
                 JSONArray photosArray = placeObject.getJSONArray("photos");

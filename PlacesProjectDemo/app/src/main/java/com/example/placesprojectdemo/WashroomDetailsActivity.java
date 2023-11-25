@@ -103,7 +103,11 @@ public class WashroomDetailsActivity extends AppCompatActivity {
             }
 
             // Display photos if available
-            displayPhotos(photoLayout, washroom.getPhotoReferences());
+            List<String> photoReferences = washroom.getPhotoReferences();
+            if (photoReferences != null) {
+                displayPhotos(photoLayout, photoReferences);
+            }
+
             displayComments();
         } else {
             Toast.makeText(this, "Washroom details not available", Toast.LENGTH_SHORT).show();
