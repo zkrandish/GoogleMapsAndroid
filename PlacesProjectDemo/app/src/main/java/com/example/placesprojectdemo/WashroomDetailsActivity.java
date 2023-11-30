@@ -1,9 +1,12 @@
 package com.example.placesprojectdemo;
 
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,14 +15,18 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class WashroomDetailsActivity extends AppCompatActivity {
+public class WashroomDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
     TextView textViewName;
@@ -32,6 +39,8 @@ public class WashroomDetailsActivity extends AppCompatActivity {
     RatingBar ratingBar;
     EditText editTextComment;
     Washroom washroom;
+
+    Button buttonGetDirections;
 
     private ListView listViewComments;
     private ArrayAdapter<String> commentsAdapter;
@@ -61,6 +70,8 @@ public class WashroomDetailsActivity extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         editTextComment = findViewById(R.id.editTextComment);
 
+        buttonGetDirections= findViewById(R.id.buttonGetDirections);
+
         listViewComments = findViewById(R.id.listViewComments);
         commentsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         listViewComments.setAdapter(commentsAdapter);
@@ -69,6 +80,25 @@ public class WashroomDetailsActivity extends AppCompatActivity {
     }
 
     private void displayInfo() {
+
+        buttonGetDirections.setOnClickListener(v -> {
+            LatLng destinationLocation = LocationHolder.getDestinationLocation();
+            Location currentLocation = LocationHolder.getCurrentLocation();
+
+            if (currentLocation != null && destinationLocation != null) {
+                Intent intent = new Intent(WashroomDetailsActivity.this, DirectionActivity.class);
+                intent.putExtra("current_lat", currentLocation.getLatitude());
+                intent.putExtra("current_lng", currentLocation.getLongitude());
+                intent.putExtra("destination_lat", destinationLocation.latitude);
+                intent.putExtra("destination_lng", destinationLocation.longitude);
+                startActivity(intent);
+            } else {
+                Toast.makeText(WashroomDetailsActivity.this, "Washroom location not available", Toast.LENGTH_SHORT).show();
+            }
+
+
+        });
+
         // Set values to TextViews
         if (washroom != null) {
             // Set the name
@@ -171,5 +201,10 @@ public class WashroomDetailsActivity extends AppCompatActivity {
 
     public void onBackButtonClick(View view) {
         finish();
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+
     }
 }

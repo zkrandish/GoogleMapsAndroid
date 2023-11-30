@@ -118,6 +118,7 @@ public class FetchData extends AsyncTask<Object, String, String> {
 
                 // Use the data when setting the marker click listener
                 googleMap.setOnMarkerClickListener(clickedMarker -> {
+
                     Object[] data = (Object[]) clickedMarker.getTag();
                     if (data != null && data.length == 6) {
                         String markerName = (String) data[0];
@@ -126,6 +127,9 @@ public class FetchData extends AsyncTask<Object, String, String> {
                         float markerRating = (float) data[3];
                         ArrayList<String> markerPhotoReferences = (ArrayList<String>) data[4];
                         Boolean markerIsOpenNow = (Boolean) data[5];
+
+                        LatLng markerDirLatLng = marker.getPosition();
+                        LocationHolder.setDestinationLocation(markerDirLatLng);
 
                         checkWashroomInDatabase(markerName, markerAddress, markerLatLng, markerRating, markerPhotoReferences, markerIsOpenNow);
                     }
