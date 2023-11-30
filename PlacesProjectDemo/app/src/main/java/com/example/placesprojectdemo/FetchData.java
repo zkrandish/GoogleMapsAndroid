@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -91,16 +92,43 @@ public class FetchData extends AsyncTask<Object, String, String> {
                 Log.e("IsOpenNow", String.valueOf(isOpenNow));
 
 
+//                MarkerOptions markerOptions = new MarkerOptions();
+//                markerOptions.title(name);
+//                markerOptions.position(selectedPlaceLatLng);
+//                googleMap.addMarker(markerOptions);
+//                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedPlaceLatLng, 15));
+//
+//
+//                googleMap.setOnMarkerClickListener(marker -> {
+//                    // Check if the washroom is in the database based on its name
+//                    Log.e("MARKER", "Set on Click Listener");
+//                    checkWashroomInDatabase(name, address, selectedPlaceLatLng, rating, photoReferences, isOpenNow);
+//                    return true;
+//                });
+
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.title(name);
                 markerOptions.position(selectedPlaceLatLng);
-                googleMap.addMarker(markerOptions);
+                Marker marker = googleMap.addMarker(markerOptions);
+
+                // Associate marker with its data using tag
+                marker.setTag(new Object[]{name, address, selectedPlaceLatLng, rating, photoReferences, isOpenNow});
+
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedPlaceLatLng, 15));
 
+                // Use the data when setting the marker click listener
+                googleMap.setOnMarkerClickListener(clickedMarker -> {
+                    Object[] data = (Object[]) clickedMarker.getTag();
+                    if (data != null && data.length == 6) {
+                        String markerName = (String) data[0];
+                        String markerAddress = (String) data[1];
+                        LatLng markerLatLng = (LatLng) data[2];
+                        float markerRating = (float) data[3];
+                        ArrayList<String> markerPhotoReferences = (ArrayList<String>) data[4];
+                        Boolean markerIsOpenNow = (Boolean) data[5];
 
-                googleMap.setOnMarkerClickListener(marker -> {
-                    // Check if the washroom is in the database based on its name
-                    checkWashroomInDatabase(name, address, selectedPlaceLatLng, rating, photoReferences, isOpenNow);
+                        checkWashroomInDatabase(markerName, markerAddress, markerLatLng, markerRating, markerPhotoReferences, markerIsOpenNow);
+                    }
                     return true;
                 });
             }
@@ -108,6 +136,8 @@ public class FetchData extends AsyncTask<Object, String, String> {
             e.printStackTrace();
         }
     }
+
+
 
     private Boolean getOpenNow(JSONObject placeObject) {
         try {
@@ -248,7 +278,7 @@ public class FetchData extends AsyncTask<Object, String, String> {
                     // Update the washroom's rating and comments
                     washroom.updateRating(rating, totalUserRatings);
                     Log.e("AGHA OOMAD", washroom.getID());
-                    washroom.setUserComment(comment);
+                    washroom.getUserComment().add(comment);
                     washroomsRef.child(washroom.getID()).setValue(washroom);
                     // Set the updated washroom back to the database
                     mutableData.setValue(washroom);
@@ -271,14 +301,19 @@ public class FetchData extends AsyncTask<Object, String, String> {
     }
 
     public void fetchCommentsForWashroom(String washroomId, CommentsCallback callback) {
-        DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference("comments").child(washroomId);
+        DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference("washrooms").child(washroomId).child("userComment");
         commentsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> comments = new ArrayList<>();
+                Log.d("FetchData", "Washroom ID: " + washroomId);
                 for (DataSnapshot commentSnapshot : dataSnapshot.getChildren()) {
+                    Log.d("FetchData", "CommentSnapshot: " + commentSnapshot.toString());
                     String comment = commentSnapshot.getValue(String.class);
-                    comments.add(comment);
+                    if (comment != null && !comment.trim().isEmpty()) {
+                        // Exclude empty comments
+                        comments.add(comment);
+                    }
                 }
                 callback.onCommentsReceived(comments);
             }

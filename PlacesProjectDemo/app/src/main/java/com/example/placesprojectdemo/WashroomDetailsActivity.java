@@ -1,6 +1,7 @@
 package com.example.placesprojectdemo;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -120,6 +121,11 @@ public class WashroomDetailsActivity extends AppCompatActivity {
         fetchData.fetchCommentsForWashroom(washroom.getID(), new FetchData.CommentsCallback() {
             @Override
             public void onCommentsReceived(List<String> comments) {
+
+                Log.d("FetchData", "Comments received: " + comments.size());
+                for (String comment : comments) {
+                    Log.d("FetchData", "Comment: " + comment);
+                }
                 // Update the comments in the adapter
                 commentsAdapter.clear();
                 commentsAdapter.addAll(comments);

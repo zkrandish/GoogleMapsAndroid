@@ -92,12 +92,12 @@ public class Washroom implements Serializable {
         this.openNow = openNow;
     }
 
-    public List<String> getUserComment() {
+    public ArrayList<String> getUserComment() {
         return userComments;
     }
 
-    public void setUserComment(String userComment) {
-        this.userComments.add(userComment);
+    public void setUserComment(ArrayList<String> userComment) {
+        this.userComments = userComment;
     }
 
     public List<String> getPhotoReferences() {
