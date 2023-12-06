@@ -17,6 +17,18 @@
         android:theme="@style/Theme.PlacesProjectDemo"
         tools:targetApi="31">
         <activity
+            android:name=".Forget"
+            android:exported="false" />
+        <activity
+            android:name=".ForgetPassword"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="false" />
+        <activity
+            android:name=".Registration"
+            android:exported="false" />
+        <activity
             android:name=".DirectionActivity"
             android:exported="false" />
         <activity
