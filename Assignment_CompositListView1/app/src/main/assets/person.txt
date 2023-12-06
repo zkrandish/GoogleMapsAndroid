@@ -1,0 +1,4 @@
+s,100,Marc,25,Lasalle,marc
+T,120,David,3500,10,Videotron,david
+U,300,Simon,AA,simon
+s,500,Ahmad,45,Matrix,ahmad

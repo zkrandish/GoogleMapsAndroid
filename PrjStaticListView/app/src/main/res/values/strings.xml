@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PrjStaticListView</string>
+    //array of the data
+    <string-array name="listOfDays">
+        <item>saturday</item>
+        <item>sunday</item>
+        <item>monday</item>
+        <item>tuesday</item>
+        <item>wednesday</item>
+        <item>thursday</item>
+        <item>friday</item>
+    </string-array>
+</resources>

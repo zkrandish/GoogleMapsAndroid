@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SecondActivity"
+    android:background="#ffff">
+    <TextView
+        android:id="@+id/tvChangeSchedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Meal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="30sp"
+        android:textColor="#062C53"
+        />
+    <TextView
+        android:id="@+id/tvMeal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        app:layout_constraintTop_toBottomOf="@id/tvChangeSchedule"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="40dp"
+        android:textColor="#112233"
+        android:textSize="20sp"
+        />
+    <EditText
+        android:id="@+id/edDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvMeal"
+        app:layout_constraintLeft_toRightOf="@id/tvMeal"
+        android:layout_marginLeft="30dp"
+        android:textColor="#000000"
+        />
+    <Button
+        android:id="@+id/btnReturn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Return"
+        app:layout_constraintTop_toBottomOf="@id/tvMeal"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="30dp"
+        android:textAllCaps="false"
+        android:textColor="#112233"
+        android:textSize="20sp"
+        android:background="#1111"
+
+        />
+
+    <TextView
+        android:id="@+id/tvTextColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Text Color"
+        app:layout_constraintTop_toBottomOf="@id/tvMeal"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="@id/tvMeal"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:textStyle="bold"/>
+
+    <RadioGroup
+        android:id="@+id/rgTextColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/tvTextColor"
+        app:layout_constraintStart_toStartOf="@id/edDesc"
+        >
+
+        <RadioButton
+            android:id="@+id/rbRed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Red"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:onClick="onClick"
+            />
+
+        <RadioButton
+            android:id="@+id/rbGreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Green"
+            android:textColor="#000"
+
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:onClick="onClick"
+            />
+
+        <RadioButton
+            android:id="@+id/rbMagenta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Magenta"
+            android:textColor="#000"
+
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:onClick="onClick"
+            />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvBackColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Background Color"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/tvTextColor"
+        android:layout_marginTop="100dp"
+        app:layout_constraintStart_toStartOf="@id/tvMeal"
+        />
+
+    <RadioGroup
+        android:id="@+id/rgBackColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/tvBackColor"
+        app:layout_constraintStart_toStartOf="@id/edDesc"
+        android:layout_marginLeft="40dp">
+
+        <RadioButton
+            android:id="@+id/rbYellow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yellow"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="italic"/>
+
+        <RadioButton
+            android:id="@+id/rbWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="White"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="italic"/>
+    </RadioGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

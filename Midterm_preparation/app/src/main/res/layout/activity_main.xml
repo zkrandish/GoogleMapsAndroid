@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transport survey"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Client Number"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="30dp"
+        />
+    <EditText
+        android:id="@+id/edId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="6"
+        android:inputType="text"
+        android:text=""
+        app:layout_constraintTop_toTopOf="@id/tvId"
+        app:layout_constraintBottom_toBottomOf="@id/tvId"
+        app:layout_constraintLeft_toRightOf="@id/tvId"
+        android:layout_marginLeft="30dp"
+        />
+    <TextView
+        android:id="@+id/tvTypeTrans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type Of Transport"
+        app:layout_constraintTop_toBottomOf="@id/edId"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        />
+
+    <RadioGroup
+        android:id="@+id/rgTransType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvTypeTrans"
+        app:layout_constraintStart_toStartOf="@id/edId"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbBus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bus"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="italic"/>
+
+        <RadioButton
+            android:id="@+id/rbMetro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Metro"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="italic"/>
+
+        <RadioButton
+            android:id="@+id/rbPrivate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Private"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="italic"/>
+        <RadioButton
+            android:id="@+id/rbTaxi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Taxi"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="italic"/>
+    </RadioGroup>
+    <TextView
+        android:id="@+id/tvnbKm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nb Kl per Day"
+        app:layout_constraintTop_toBottomOf="@id/rgTransType"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        />
+
+    <EditText
+        android:id="@+id/edNbKm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text=""
+      app:layout_constraintTop_toBottomOf="@id/rgTransType"
+        app:layout_constraintLeft_toRightOf="@id/tvnbKm"
+        app:layout_constraintStart_toStartOf="@id/rgTransType"
+        />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="20dp"
+        />
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clear All"
+        app:layout_constraintTop_toTopOf="@id/btnSave"
+        app:layout_constraintLeft_toLeftOf="@id/btnSave"
+        app:layout_constraintRight_toRightOf="@id/btnQuit"
+        android:textAllCaps="false"
+        />
+    <Button
+        android:id="@+id/btnQuit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quit"
+        app:layout_constraintTop_toTopOf="@id/btnSave"
+        app:layout_constraintBottom_toBottomOf="@id/btnSave"
+        app:layout_constraintRight_toLeftOf="@id/btnShowAll"
+        android:textAllCaps="false"
+        android:layout_marginRight="20dp"
+
+        />
+
+    <Button
+        android:id="@+id/btnShowAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show all"
+        android:textAllCaps="false"
+        app:layout_constraintTop_toTopOf="@id/btnSave"
+        app:layout_constraintBottom_toBottomOf="@id/btnSave"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,69 @@
+package model;
+
+import java.util.ArrayList;
+
+public class Teams {
+    private int id;
+    private String name;
+    private String photo;
+    private Project project;
+    private ArrayList<String>members;
+
+    public Teams() {
+    }
+
+    public Teams(int id, String name, String photo, Project project, ArrayList<String> members) {
+        this.id = id;
+        this.name = name;
+        this.photo = photo;
+        this.project = project;
+        this.members = members;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public ArrayList<String> getMembers() {
+        return members;
+    }
+
+    public void setMembers(ArrayList<String> members) {
+        this.members = members;
+    }
+
+    @Override
+    public String toString() {
+        return "Teams{" +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}

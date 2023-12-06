@@ -1,0 +1,6 @@
+S,100,Wayne Gretzky,20,Canada College,gretzky
+T,200,Mario Lemieux,3500,10,canada company,lemieux
+T,201,Bobby Orr,2000,20,Boston company,orr
+S,101,Maurice Richard,29,Montreal college,richard
+S,102,Mark Messier,25,Edmonton college,messier
+U,202,simon,AA,simon
