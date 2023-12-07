@@ -93,4 +93,6 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
             Log.d("mylog", "without Polylines drawn");
         }
     }
+
 }
+

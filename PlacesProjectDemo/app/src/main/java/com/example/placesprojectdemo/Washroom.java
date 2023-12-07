@@ -5,20 +5,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Washroom implements Serializable {
+    private String ID;
     private String name;
     private String address;
     private double latitude;
     private double longitude;
     private float rating;
 
-    private Boolean openNow;
-    private List<String> photoReferences;
+    private int totalUserRatings = 0;
+    private ArrayList<String> userComments;
 
-    // Add other fields as needed
+    private Boolean openNow;
+    private ArrayList<String> photoReferences;
 
     public Washroom() {
-        // Default constructor required for Firebase
+        this.photoReferences = new ArrayList<String>();
+        this.userComments = new ArrayList<String>();
     }
+
+
 
     public Washroom(String name, String address, double latitude, double longitude, float rating, Boolean openNow, List<String> photoReferences) {
         this.name = name;
@@ -27,7 +32,16 @@ public class Washroom implements Serializable {
         this.longitude = longitude;
         this.rating = rating;
         this.openNow = false; // Default value
-        this.photoReferences = new ArrayList<>();
+        this.photoReferences = new ArrayList<String>(photoReferences);
+        this.userComments = new ArrayList<String>();
+    }
+
+    public String getID() {
+        return this.ID;
+    }
+
+    public void setID(String id) {
+        this.ID = id;
     }
 
     public String getName() {
@@ -78,6 +92,14 @@ public class Washroom implements Serializable {
         this.openNow = openNow;
     }
 
+    public ArrayList<String> getUserComment() {
+        return userComments;
+    }
+
+    public void setUserComment(ArrayList<String> userComment) {
+        this.userComments = userComment;
+    }
+
     public List<String> getPhotoReferences() {
         return photoReferences;
     }
@@ -99,5 +121,11 @@ public class Washroom implements Serializable {
                 ", is Open now? =" + isOpenNow() +
                 // Add other fields as needed
                 '}';
+    }
+
+    public void updateRating(float rating, int totalUserRatings) {
+        this.totalUserRatings += totalUserRatings;
+        this.totalUserRatings++;
+        this.rating = (this.rating + rating) / 2;
     }
 }

@@ -22,4 +22,6 @@ public class LocationHolder {
     public static void setDestinationLocation(LatLng  location) {
         DestinationLocation = location;
     }
+
 }
+

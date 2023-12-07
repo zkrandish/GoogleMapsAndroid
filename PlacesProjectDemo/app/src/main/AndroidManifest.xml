@@ -17,6 +17,7 @@
         android:theme="@style/Theme.PlacesProjectDemo"
         tools:targetApi="31">
         <activity
+
             android:name=".Forget"
             android:exported="false" />
         <activity

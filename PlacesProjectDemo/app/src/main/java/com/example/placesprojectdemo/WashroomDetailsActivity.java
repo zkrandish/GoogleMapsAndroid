@@ -3,10 +3,17 @@ package com.example.placesprojectdemo;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,13 +24,33 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class WashroomDetailsActivity extends AppCompatActivity implements OnMapReadyCallback{
+
+public class WashroomDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+
+    TextView textViewName;
+    TextView textViewAddress;
+    TextView textViewLatitude;
+    TextView textViewLongitude;
+    TextView textViewRating;
+    TextView textViewOpenNow;
+    LinearLayout photoLayout;
+    RatingBar ratingBar;
+    EditText editTextComment;
+    Washroom washroom;
+
+    Button buttonGetDirections;
+
+    private ListView listViewComments;
+    private ArrayAdapter<String> commentsAdapter;
 
     GoogleMap map;
 
@@ -33,20 +60,41 @@ public class WashroomDetailsActivity extends AppCompatActivity implements OnMapR
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_washroom_details);
+        initialize();
 
+    }
+
+
+
+
+    private void initialize() {
 
         // Get the Washroom object from Intent
-        Washroom washroom = (Washroom) getIntent().getSerializableExtra("washroom");
+        washroom = (Washroom) getIntent().getSerializableExtra("washroom");
 
         // Find TextViews and ImageView in the layout
-        TextView textViewName = findViewById(R.id.textViewName);
-        TextView textViewAddress = findViewById(R.id.textViewAddress);
-        TextView textViewLatitude = findViewById(R.id.textViewLatitude);
-        TextView textViewLongitude = findViewById(R.id.textViewLongitude);
-        TextView textViewRating = findViewById(R.id.textViewRating);
-        TextView textViewOpenNow = findViewById(R.id.textViewOpenNow);
-        LinearLayout photoLayout = findViewById(R.id.photoLayout);
-        Button buttonGetDirections= findViewById(R.id.buttonGetDirections);
+
+        textViewName = findViewById(R.id.textViewName);
+        textViewAddress = findViewById(R.id.textViewAddress);
+        textViewLatitude = findViewById(R.id.textViewLatitude);
+        textViewLongitude = findViewById(R.id.textViewLongitude);
+        textViewRating = findViewById(R.id.textViewRating);
+        textViewOpenNow = findViewById(R.id.textViewOpenNow);
+        photoLayout = findViewById(R.id.photoLayout);
+        ratingBar = findViewById(R.id.ratingBar);
+        editTextComment = findViewById(R.id.editTextComment);
+
+        buttonGetDirections= findViewById(R.id.buttonGetDirections);
+
+        listViewComments = findViewById(R.id.listViewComments);
+        commentsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        listViewComments.setAdapter(commentsAdapter);
+
+        displayInfo();
+    }
+
+    private void displayInfo() {
+
 
         buttonGetDirections.setOnClickListener(v -> {
             LatLng destinationLocation = LocationHolder.getDestinationLocation();
@@ -60,8 +108,9 @@ public class WashroomDetailsActivity extends AppCompatActivity implements OnMapR
                 intent.putExtra("destination_lng", destinationLocation.longitude);
                 startActivity(intent);
             } else {
-                    Toast.makeText(WashroomDetailsActivity.this, "Washroom location not available", Toast.LENGTH_SHORT).show();
-                }
+
+                Toast.makeText(WashroomDetailsActivity.this, "Washroom location not available", Toast.LENGTH_SHORT).show();
+            }
 
 
         });
@@ -101,11 +150,35 @@ public class WashroomDetailsActivity extends AppCompatActivity implements OnMapR
             }
 
             // Display photos if available
-            displayPhotos(photoLayout, washroom.getPhotoReferences());
+            List<String> photoReferences = washroom.getPhotoReferences();
+            if (photoReferences != null) {
+                displayPhotos(photoLayout, photoReferences);
+            }
+
+            displayComments();
         } else {
             Toast.makeText(this, "Washroom details not available", Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    private void displayComments() {
+        FetchData fetchData = new FetchData();
+        fetchData.fetchCommentsForWashroom(washroom.getID(), new FetchData.CommentsCallback() {
+            @Override
+            public void onCommentsReceived(List<String> comments) {
+
+                Log.d("FetchData", "Comments received: " + comments.size());
+                for (String comment : comments) {
+                    Log.d("FetchData", "Comment: " + comment);
+                }
+                // Update the comments in the adapter
+                commentsAdapter.clear();
+                commentsAdapter.addAll(comments);
+                // Notify the adapter that the data has changed
+                commentsAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void displayPhotos(LinearLayout photoLayout, List<String> photoReferences) {
@@ -125,6 +198,21 @@ public class WashroomDetailsActivity extends AppCompatActivity implements OnMapR
                 "maxwidth=" + maxWidth +
                 "&photoreference=" + photoReference +
                 "&key=" + getResources().getString(R.string.google_maps_key);
+    }
+    public void onSaveButtonClick(View view) {
+        // Get the rating and comment from the UI elements
+        float userRating = ratingBar.getRating();
+        String userComment = editTextComment.getText().toString();
+
+        if (washroom != null) {
+            FetchData fetchData = new FetchData();
+            fetchData.addRatingAndCommentToWashroom(washroom.getID(), userRating, userComment);
+            Toast.makeText(this, "MAmad: " + userRating + ", Comment: " + userComment, Toast.LENGTH_SHORT).show();
+        }
+
+
+        // Provide feedback to the user
+        Toast.makeText(this, "Rating: " + userRating + ", Comment: " + userComment, Toast.LENGTH_SHORT).show();
     }
 
     public void onBackButtonClick(View view) {

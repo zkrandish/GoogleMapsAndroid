@@ -163,18 +163,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-        private void initialize() {
+    private void initialize() {
         materialSearchBar = findViewById(R.id.searchBar);
         btnFind = findViewById(R.id.btnFind);
         ripple_bg = findViewById(R.id.ripple_bg);
 
-            // Initialize the Toolbar
-            toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
+        // Initialize the Toolbar
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-            // Add back button to the Toolbar
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        // Add back button to the Toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
     }

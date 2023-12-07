@@ -1,23 +1,31 @@
 package com.example.placesprojectdemo;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
+
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+
 import getDirection.FetchURL;
 import getDirection.TaskLoadedCallback;
 
@@ -47,6 +55,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
             public void onClick(View v) {
                 String url= getUrl(place1.getPosition(),place2.getPosition(),"walking");;
                 new FetchURL (DirectionActivity.this).execute(url,"walking");
+
                 // Zoom the camera to include both markers (origin and destination)
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 builder.include(place1.getPosition());
@@ -55,6 +64,7 @@ public class DirectionActivity extends AppCompatActivity implements OnMapReadyCa
                 int padding = 100; // Adjust the padding as needed
                 CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                 map.animateCamera(cu);
+
             }
         });
 

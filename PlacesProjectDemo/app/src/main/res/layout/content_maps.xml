@@ -5,12 +5,14 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-<fragment
-    android:id="@+id/map"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    ></fragment>
+
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        ></fragment>
+
     <com.skyfishjy.library.RippleBackground
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,12 +22,12 @@
         app:rb_rippleAmount="4"
         app:rb_duration="3000"
         app:rb_scale="6">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@drawable/location_sign_svgrepo_com"
-        android:translationY="-18dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/location_sign_svgrepo_com"
+            android:translationY="-18dp"/>
     </com.skyfishjy.library.RippleBackground>
 
     <com.mancj.materialsearchbar.MaterialSearchBar
