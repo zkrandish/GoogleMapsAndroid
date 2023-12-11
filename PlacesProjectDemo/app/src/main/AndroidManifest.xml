@@ -17,6 +17,25 @@
         android:theme="@style/Theme.PlacesProjectDemo"
         tools:targetApi="31">
         <activity
+            android:name="authentication.Forget"
+            android:exported="false" />
+
+        <activity
+            android:name="authentication.Login"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="authentication.Registration"
+            android:exported="false" />
+        <activity
+            android:name=".DirectionActivity"
+            android:exported="false" />
+        <activity
             android:name=".WashroomDetailsActivity"
             android:exported="false" />
         <activity
@@ -35,11 +54,11 @@
         <activity
             android:name=".PersmissionsActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
     </application>
 
